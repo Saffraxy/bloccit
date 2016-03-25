@@ -3,14 +3,14 @@ class PostsController < ApplicationController
     @posts = Post.all
   end
 
-#19, we find the post that corresponds to the id in the params that was passed to show
+# we find the post that corresponds to the id in the params that was passed to show
 ##  and assign it to @post. Unlike in the index method, in the show method, we populate
 ##  an instance variable with a single post, rather than a collection of posts.
   def show
     @post = Post.find(params[:id])
   end
 
-#7, we create an instance variable, @post, then assign it an empty post returned by Post.new.
+# we create an instance variable, @post, then assign it an empty post returned by Post.new.
   def new
     @post = Post.new
   end
