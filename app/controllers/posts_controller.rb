@@ -1,31 +1,32 @@
 class PostsController < ApplicationController
-  def index
-    @posts = Post.all
-  end
 
-#19, we find the post that corresponds to the id in the params that was passed to show
+# we find the post that corresponds to the id in the params that was passed to show
 ##  and assign it to @post. Unlike in the index method, in the show method, we populate
 ##  an instance variable with a single post, rather than a collection of posts.
   def show
     @post = Post.find(params[:id])
   end
 
-#7, we create an instance variable, @post, then assign it an empty post returned by Post.new.
+# we create an instance variable, @post, then assign it an empty post returned by Post.new.
   def new
+    @topic = Topic.find(params[:topic_id])
     @post = Post.new
   end
 
   def create
-#9, we call Post.new to create a new instance of Post.
+# we call Post.new to create a new instance of Post.
     @post = Post.new
     @post.title = params[:post][:title]
     @post.body = params[:post][:body]
-#10 Redirecting to @post will direct the user to the posts show view.
+    @topic = Topic.find(params[:topic_id])
+#we assign a topic to a post.
+    @post.topic = @topic
+# Redirecting to @post will direct the user to the posts show view.
     if @post.save
-#11, we assign a value to flash[:notice]. The flash hash provides a way to pass temporary values between actions.
+# we assign a value to flash[:notice]. The flash hash provides a way to pass temporary values between actions.
 #  Any value placed in flash will be available in the next action and then deleted.
       flash[:notice] = "Post was saved."
-      redirect_to @post
+      redirect_to [@topic, @post]
     else
       flash.now[:alert] = "There was an error saving the post. Please try again."
       render :new
@@ -43,7 +44,7 @@ class PostsController < ApplicationController
 
     if @post.save
       flash[:notice] = "Post was updated"
-      redirect_to @post
+      redirect_to [@post.topic, @post]
     else
       flash.now[:alert] = "There was an error saving your post. Please try again."
       render :edit
@@ -55,7 +56,7 @@ class PostsController < ApplicationController
 # we call destroy on @post and set flash messages to user accordingly.
     if @post.destroy
       flash[:notice] = "\"#{@post.title}\" was deleted successfully."
-      redirect_to posts_path
+      redirect_to @post.topic
     else
       flash.now[:alert] = "There was an error deleting the post."
       render :show
