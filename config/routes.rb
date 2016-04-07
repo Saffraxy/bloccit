@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   resources :topics do
       resources :posts, except: [:index]
   end
-  
+## we create routes for new and create actions.
+### The only hash key will prevent Rails from creating unnecessary routes.
+  resources :users, only: [:new, :create]
 
   get 'about' => 'welcome#about'
 
