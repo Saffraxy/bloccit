@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 ### The only hash key will prevent Rails from creating unnecessary routes.
   resources :users, only: [:new, :create]
 
+  post 'users/confirmation' => 'users#confirmation'
   get 'about' => 'welcome#about'
 
   #get 'welcome/faq'
