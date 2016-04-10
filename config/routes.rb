@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
   get 'about' => 'welcome#about'
 
-  #get 'welcome/faq'
+  get 'welcome/faq'
 
   root 'welcome#index'
 

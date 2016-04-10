@@ -1,25 +1,86 @@
 require 'rails_helper'
 
+include SessionsHelper
+
 RSpec.describe PostsController, type: :controller do
+  let(:my_user) { User.create!(name: "Bloccit User", email: "user@bloccit.com", password: "helloworld") }
 #we create a parent topic named my_topic
-  let(:my_topic) { Topic.create!(name: RandomData.random_sentence, description: RandomData.random_paragraph)}
+  let(:my_topic) { Topic.create!(name: RandomData.random_sentence, description: RandomData.random_paragraph) }
 #we update how we create my_post so that it will belong to my_topic
-  let(:my_post) { my_topic.posts.create!(title: RandomData.random_sentence, body: RandomData.random_paragraph)}
+  let(:my_post) { my_topic.posts.create!(title: RandomData.random_sentence, body: RandomData.random_paragraph, user: my_user) }
 
-#we remove the index tests. Posts will no longer need an index view because
-# they'll be displayed on the show view of their parent topic.
-#  describe "GET #index" do
-#    it "returns http success" do
-#      get :index
-#      expect(response).to have_http_status(:success)
-#    end
+context "guest user" do
 
-#    it "assigns [my_post] to @posts" do
-#      get :index
-#      expect(assigns(:posts)).to eq([my_post])
-#    end
-#  end
+  describe "GET show" do
+    it "returns http success" do
+#Posts routes will now include the topic_id of the parent topic
+      get :show, topic_id: my_topic.id, id: my_post.id
+      expect(response).to have_http_status(:success)
+    end
+    it "renders the #show view" do
+      get :show, topic_id: my_topic.id, id: my_post.id
+      expect(response).to render_template :show
+    end
+    it "assigns my_post to @post" do
+      get :show, topic_id: my_topic.id, id: my_post.id
+# we expect the post to equal my_post because we call show with the id of my_post.
+##  We are testing that the post returned to us is the post we asked for.
+      expect(assigns(:post)).to eq(my_post)
+    end
+  end
 
+# When new is invoked, a new and unsaved Post object is created.
+## we update the get :new request to include the id of the parent topic.
+  describe "GET new" do
+    it "returns http redirect" do
+      get :new, topic_id: my_topic.id
+      expect(response).to redirect_to(new_session_path)
+    end
+  end
+
+  describe "POST create" do
+# When create is invoked, the newly created object is persisted to the database.
+#  we expect that after PostsController#create is called with the parameters,
+#  the count of Post instances (i.e. rows in the posts table) in the database will increase by one.
+    it "returns http redirect" do
+      post :create, topic_id: my_topic.id, post: {title: RandomData.random_sentence, body: RandomData.random_paragraph}
+      expect(response).to redirect_to(new_session_path)
+    end
+  end
+
+  describe "GET edit" do
+    it "returns http redirect" do
+      get :edit, topic_id: my_topic.id, id: my_post.id
+      expect(response).to redirect_to(new_session_path)
+    end
+  end
+
+  describe "PUT update" do
+    it "returns http redirect" do
+      new_title = RandomData.random_sentence
+      new_body = RandomData.random_paragraph
+
+      put :update, topic_id: my_topic.id, id: my_post.id, post: {title: new_title, body: new_body}
+      expect(response).to redirect_to(new_session_path)
+    end
+  end
+
+  describe "DELETE destroy" do
+    it "returns http redirect" do
+      delete :destroy, topic_id: my_topic.id, id: my_post.id
+# we search the database for a post with an id equal to my_post.id. This returns
+#  an Array. We assign the size of the array to count, and we expect count to equal
+#  zero. This test asserts that the database won't have a matching post after destroy
+#  is called.
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+end
+
+context "signed-in user" do
+  before do
+    create_session(my_user)
+  end
   describe "GET show" do
     it "returns http success" do
 #Posts routes will now include the topic_id of the parent topic
@@ -141,5 +202,7 @@ RSpec.describe PostsController, type: :controller do
       expect(response).to redirect_to my_topic
     end
   end
+
+end
 
 end
