@@ -15,6 +15,6 @@ class User < ActiveRecord::Base
             length: { minimum: 3, maximum: 254 }
   has_secure_password
 
-  enum role: [:member, :admin]
+  enum role: [:member, :moderator, :admin]
 
 end

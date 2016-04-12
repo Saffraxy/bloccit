@@ -1,7 +1,8 @@
 class TopicsController < ApplicationController
 
   before_action :require_sign_in, except: [:index, :show]
-  before_action :authorize_user, except: [:index, :show]
+  before_action :restrict_user, except: [:index, :show, :edit, :update]
+  before_action :authorize_user, except: [:index, :show, :edit, :update]
 
   def index
     @topics = Topic.all
@@ -67,4 +68,12 @@ class TopicsController < ApplicationController
        redirect_to topics_path
      end
    end
+
+   def restrict_user
+     if current_user.moderator?
+       flash[:alert] = "Moderators cannot delete topics."
+       redirect_to topics_path
+     end
+   end
+
 end

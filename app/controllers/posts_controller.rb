@@ -1,7 +1,8 @@
 class PostsController < ApplicationController
 
   before_action :require_sign_in, except: :show
-  before_action :authorize_user, except: [:show, :new, :create]
+  before_action :restrict_user, except: [:show, :new, :create, :edit, :update]
+  before_action :authorize_user, except: [:show, :new, :create, :edit, :update]
 # we find the post that corresponds to the id in the params that was passed to show
 ##  and assign it to @post. Unlike in the index method, in the show method, we populate
 ##  an instance variable with a single post, rather than a collection of posts.
@@ -74,4 +75,13 @@ private
       redirect_to [post.topic, post]
     end
   end
-end
+
+  def restrict_user
+    post = Post.find(params[:id])
+    if current_user.moderator?
+      flash[:alert] = "Moderators cannot delete posts."
+      redirect_to [post.topic, post]
+    end
+  end
+
+  end
