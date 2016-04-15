@@ -23,6 +23,8 @@ RSpec.describe Post, type: :model do
   it { is_expected.to validate_length_of(:title).is_at_least(5) }
   it { is_expected.to validate_length_of(:body).is_at_least(20) }
 
+  it { is_expected.to have_many(:comments) }
+
   describe "attributes" do
     it "has a title, body, and user attribute" do
       expect(post).to have_attributes(title: title, body: body, user: user)
