@@ -17,6 +17,10 @@
       </div>
     <% end %>
   </div>
+  <div>
+  <h3>Topics</h3>
+  <%= render @topics %>
+  </div>
   <% if user_is_authorized_for_topics? %>
     <div class="col-md-4">
 <!--# we create a link to create a new topic. -->
