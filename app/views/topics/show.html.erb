@@ -11,6 +11,13 @@
       <br />
       <%= @topic.description %>
     </p>
+<!--#Assignment42 -->
+    <div>
+      <h3>Comments</h3>
+    </div>
+    <% if current_user %>
+      <%= render 'comments/form', comment: Comment.new, grab: @topic %>
+    <% end %>
 <!--# we iterate over the posts belonging to @topic, and display each post-->
     <% @topic.posts.each do |post| %>
       <div class="media">

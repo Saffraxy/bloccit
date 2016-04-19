@@ -3,29 +3,51 @@ class CommentsController < ApplicationController
   before_action :authorize_user, only: [:destroy]
 
   def create
-    @post = Post.find(params[:post_id])
-    comment = @post.comments.new(comment_params)
-    comment.user = current_user
 
-    if comment.save
-      flash[:notice] = "Comments saved successfully."
-      redirect_to [@post.topic, @post]
-    else
-      flash[:alert] = "Comment failed to save."
-      redirect_to [@post.topic, @post]
+    if params[:topic_id]
+      @grab = Topic.find(params[:topic_id])
+    elsif params[:post_id]
+      @grab = Post.find(params[:post_id])
     end
-  end
+
+      @comment = @grab.comments.new(comment_params)
+      @comment.user = current_user
+
+      if @comment.save
+
+        if @grab.is_a?(Post)
+          flash[:notice] = "Comment saved successfully."
+          redirect_to [@grab.topic, @grab]
+        elsif @grab.is_a?(Topic)
+          flash[:notice] = "Comment saved successfully."
+          redirect_to [@grab]
+        end
+      end
+    end
+#      elsif params[:post_id]
+#        flash[:alert] = "Comment failed to save."
+#        redirect_to [@grab.topic, @grab]
+#      elsif params[:topic_id]
+#        flash[:alert] = "Comment failed to save."
+#        redirect_to [@grab]
+#      end
+#    end
 
   def destroy
-    @post = Post.find(params[:post_id])
-    comment = @post.comments.find(params[:id])
+    if params[:topic_id]
+      @grab = Topic.find(params[:topic_id])
+    elsif params[:post_id]
+      @grab = Post.find(params[:post_id])
+    end
+
+    comment = @grab.comments.find(params[:id])
 
     if comment.destroy
-      flash[:notice] = "Comment was deleted."
-      redirect_to [@post.topic, @post]
+        flash[:notice] = "Comment was deleted."
+        redirect_to :back
     else
-      flash[:alert] = "Comment couldn't be deleted. Try again."
-      redirect_to [@post.topic, @post]
+        flash[:alert] = "Comment couldn't be deleted. Try again."
+        redirect_to :back
     end
   end
 
