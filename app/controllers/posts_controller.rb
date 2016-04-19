@@ -21,7 +21,9 @@ class PostsController < ApplicationController
     @post = @topic.posts.build(post_params)
     @post.user = current_user
 # Redirecting to @post will direct the user to the posts show view.
+
     if @post.save
+      @post.labels = Label.update_labels(params[:post][:labels])
 # we assign a value to flash[:notice]. The flash hash provides a way to pass temporary values between actions.
 #  Any value placed in flash will be available in the next action and then deleted.
       flash[:notice] = "Post was saved."
@@ -41,6 +43,7 @@ class PostsController < ApplicationController
     @post.assign_attributes(post_params)
 
     if @post.save
+      @post.labels = Label.update_labels(params[:post][:labels])
       flash[:notice] = "Post was updated"
       redirect_to [@post.topic, @post]
     else

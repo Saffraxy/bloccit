@@ -4,6 +4,9 @@ RSpec.describe Topic, type: :model do
   let(:topic) { Topic.create!(name: RandomData.random_sentence, description: RandomData.random_paragraph)}
 
   it { is_expected.to have_many(:posts) }
+  it { is_expected.to have_many(:labelings) }
+  it { is_expected.to have_many(:labels).through(:labelings) }
+  
 # we confirm that a topic responds to the appropriate attributes.
   describe "attributes" do
     it "responds to name" do
