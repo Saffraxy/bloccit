@@ -9,9 +9,12 @@ class CommentsController < ApplicationController
     elsif params[:post_id]
       @grab = Post.find(params[:post_id])
     end
-
+    Rails.logger.info ">>>> grab: #{@grab.inspect}"
       @comment = @grab.comments.new(comment_params)
       @comment.user = current_user
+
+      Rails.logger.info ">>> comment: #{@comment.inspect}"
+      Rails.logger.info ">>>> comment valid? #{@comment.valid?}"
 
       if @comment.save
 
@@ -21,7 +24,13 @@ class CommentsController < ApplicationController
         elsif @grab.is_a?(Topic)
           flash[:notice] = "Comment saved successfully."
           redirect_to [@grab]
+        else
+          flash[:notice] = "Grab didn't know what it was"
+          redirect_to root_path
         end
+      else
+        flash[:alert] = "There was a problem saving this comment"
+        redirect_to :back
       end
     end
 #      elsif params[:post_id]
