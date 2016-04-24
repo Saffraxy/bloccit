@@ -87,5 +87,19 @@ RSpec.describe Post, type: :model do
       end
     end
 
+    #create a new vote for the post on which it's called,
+      #associated with both the post and the user who created it.
+    describe "#create_vote" do
+      it "creates a new vote when a post is created" do
+        post = topic.posts.new(title: RandomData.random_sentence, body: RandomData.random_sentence, user: user)
+        expect(post).to receive(:create_vote)
+        post.save
+      end
+
+      it "vote is associated with the post and user" do
+        expect(post.votes.first.user).to eq(post.user)
+      end
+    end
+
   end
 end
