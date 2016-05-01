@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   has_many :comments, dependent: :destroy
   has_many :votes, dependent: :destroy
   has_many :favorites, dependent: :destroy
+  has_many :favorited_posts, :through => :favorites, :source => :post
 
   before_save { self.email = email.downcase }
   before_save { self.role ||= :member }

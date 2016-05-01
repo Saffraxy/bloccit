@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 ##  won't give users the ability to view individual comments or edit comments,
 ##  removing the need for show, update, and edit routes.
     resources :comments, only: [:create, :destroy]
-    resources :favorites, only: [:create, :destroy]
+    resources :favorites, only: [:create, :destroy, :show]
 
     post '/up-vote' => 'votes#up_vote', as: :up_vote
     post '/down-vote' => 'votes#down_vote', as: :down_vote
