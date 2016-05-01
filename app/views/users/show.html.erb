@@ -33,5 +33,27 @@
   <%= render @user.comments %>
 <% end %>
 
-<h2>Favorites</h2>
-<%= render @user.favorited_posts %>
+<div class="row">
+  <div class="col-md-8">
+    <div class="media">
+      <br />
+        <div class="media-body">
+          <h2 class="media-heading">Favorites</h2>
+            <%= render @user.favorited_posts %>
+        </div>
+        <div class="media-right">
+            <small>
+              <% if @user.favorited_posts.exists? %>
+                <% @user.favorited_posts.each do |post| %>
+                  <%= image_tag("http://www.gravatar.com/avatar.php?gravatar_id=#{Digest::MD5::hexdigest(post.user.email)}", :alt => 'Avatar', :class => 'avatar') %>
+                  <%= post.user.name %>
+                  <%= pluralize("#{7}", 'post') %>,
+                  <%= pluralize("#{3}", 'vote') %>
+                  <% end %>
+              <% end %>
+            </small>
+        </div>
+
+      </div>
+    </div>
+  </div>
