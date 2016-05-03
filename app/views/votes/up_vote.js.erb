@@ -1,0 +1,2 @@
+$('.js-points').("<%= escape_javascript(render(@post.points)) %>");
+$('.up_vote').html("<%= escape_javascript(render partial: 'votes/voter', locals: { post: @post, vote: @vote }) %>");
