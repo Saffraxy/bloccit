@@ -1,13 +1,25 @@
 <div class="media">
-  <%= render partial: 'votes/voter', locals: { post: post } %>
-  <div class="media-body">
-    <h4 class="media-heading">
-      <%= link_to post.title, topic_post_path(post.topic, post) %>
-      <% render partial: "labels/list", locals: { labels: post.labels } %>
-    </h4>
+  <div class="col-md-7">
+    <%= render partial: 'votes/voter', locals: { post: post } %>
+    <div class="media-body">
+      <h4 class="media-heading">
+        <%= link_to post.title, topic_post_path(post.topic, post) %>
+        <% render partial: "labels/list", locals: { labels: post.labels } %>
+      </h4>
+      <small>
+        submitted <%= time_ago_in_words(post.created_at) %> ago by <%= post.user.name %> <br>
+        <%= post.comments.count %> Comments
+      </small>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <%= image_tag("http://www.gravatar.com/avatar.php?gravatar_id=#{Digest::MD5::hexdigest(post.user.email)}", :alt => 'Avatar', :class => 'avatar') %>
+  </div>
+  <div class="col-md-3">
     <small>
-      submitted <%= time_ago_in_words(post.created_at) %> ago by <%= post.user.name %> <br>
-      <%= post.comments.count %> Comments
-    </small>
+        <%= post.user.name %><br/>
+        <%= pluralize(post.user.posts.count, 'post') %>,<br/>
+        <%= pluralize(post.user.votes.count, 'vote') %>
+      </small>
   </div>
 </div>
