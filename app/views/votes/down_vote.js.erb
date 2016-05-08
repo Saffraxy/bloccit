@@ -1,2 +1,2 @@
-$('.js-points').("<%= escape_javascript(render(@post.points)) %>");
+$('.js-points').html("<%= escape_javascript(render partial: 'posts/points') %>");
 $("#post_votes_<%= @post.id %>").html("<%= @post.points %>");

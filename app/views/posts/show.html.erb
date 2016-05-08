@@ -46,13 +46,7 @@
   <div class="col-md-4">
     <h3>
       <div class='js-points'>
-      <%= pluralize(@post.points, 'point') %>
-      <div>
-        <small>
-          <%= pluralize(@post.up_votes, 'up vote') %>,
-          <%= pluralize(@post.down_votes, 'down vote') %>
-        </small>
-      </div>
+        <%= render "points" %>
       </div>
     </h3>
     <% if current_user %>
